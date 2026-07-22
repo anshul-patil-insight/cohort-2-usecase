@@ -1,20 +1,33 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-WORK_DIR="/Users/audayaku/Automated-Project-Backup-Utility"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORK_DIR="$SCRIPT_DIR"
 BASE_DIR="$WORK_DIR/Projects"
 SCRIPT_PATH="$WORK_DIR/backup_project.sh"
 
 echo "Starting daily backup wrapper"
 
-cd "$WORK_DIR" || exit
+mkdir -p "$BASE_DIR"
 
-for project_dir in "$BASE_DIR"/*; do
+if [ ! -x "$SCRIPT_PATH" ]; then
+    echo "Backup script is not executable: $SCRIPT_PATH"
+    exit 1
+fi
+
+shopt -s nullglob
+project_dirs=("$BASE_DIR"/*)
+shopt -u nullglob
+
+for project_dir in "${project_dirs[@]}"; do
     if [ -d "$project_dir" ]; then
         echo ""
         echo "Triggering backup for: $project_dir"
-        "$SCRIPT_PATH" "$project_dir"
+        if ! "$SCRIPT_PATH" "$project_dir"; then
+            echo "Backup failed for: $project_dir"
+        fi
     fi
- done
+done
 
 echo ""
 echo "All project backups completed"
