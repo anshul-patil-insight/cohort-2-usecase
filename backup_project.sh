@@ -52,8 +52,8 @@ else
     ARCHIVE_PATH="$BACKUP_DEST/$ARCHIVE_NAME"
 
     if [ -f "$ARCHIVE_PATH" ]; then
-        TIMESTAMP=$(date +%s)
-        ARCHIVE_NAME="${PROJECT_NAME}backup${TIMESTAMP}.tar.gz"
+        TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+        ARCHIVE_NAME="${PROJECT_NAME}-${TIMESTAMP}.tar.gz"
         ARCHIVE_PATH="$BACKUP_DEST/$ARCHIVE_NAME"
     fi
 
